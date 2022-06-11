@@ -94,8 +94,7 @@ void setup(void){
 
   srand(time(NULL));
   
-  display.init();
-  display.startWrite();
+  display.begin();
   display.setColorDepth(16);
   display.fillScreen(TFT_BLACK);
 
@@ -109,8 +108,6 @@ void setup(void){
 }
 
 void loop(void){
-
-  display.waitDisplay();
 
   move_turmite();
 
@@ -126,7 +123,5 @@ void loop(void){
   if((moves>20000) && (current_diff == 0) && (filled < 1000)) rndrule();
 
   display.writePixel(x, y, image);
-
-  display.display();
 
 }
