@@ -4,6 +4,7 @@
 
 #define WIDTH   1280
 #define HEIGHT  720
+#define SCR     (WIDTH*HEIGHT)
 
 M5AtomDisplay display (WIDTH, HEIGHT);
 
@@ -26,8 +27,8 @@ void rndrule(){
 
   display.fillScreen(TFT_BLACK);
 
-  for (int j=0; j < HEIGHT; j++){ for (int i = 0; i < WIDTH; i++) world[i+j*WIDTH]=0;} 
-  
+  for (int i = 0; i < SCR; i++) world[i] = 0; 
+
   filled = 0;
   last_filled = 0;
   moves = 0;
@@ -92,6 +93,8 @@ static void on_button(void){ rndrule(); }
 
 void setup(void){
 
+  world = (uint8_t*)ps_malloc(size);
+
   srand(time(NULL));
   
   display.begin();
@@ -100,8 +103,6 @@ void setup(void){
 
   pinMode(39, INPUT);
   attachInterrupt(digitalPinToInterrupt(39), on_button, FALLING);
-
-  world = (uint8_t*)ps_malloc(size);
   
   rndrule();
 
@@ -119,7 +120,7 @@ void loop(void){
   }
 
   if((moves>1000) && (filled < 50)) rndrule();
-  if((moves>5000) && (filled < 500) && (current_diff ==0)) rndrule();
+  if((moves>5000) && (filled < 500) && (current_diff == 0)) rndrule();
   if((moves>20000) && (current_diff == 0) && (filled < 1000)) rndrule();
 
   display.writePixel(x, y, image);
