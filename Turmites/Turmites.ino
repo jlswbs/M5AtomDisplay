@@ -1,5 +1,6 @@
 // Turmites cellular automata //
 
+#include <M5GFX.h>
 #include <M5AtomDisplay.h>
 
 #define WIDTH   1280
@@ -27,7 +28,7 @@ void rndrule(){
 
   display.fillScreen(TFT_BLACK);
 
-  for (int i = 0; i < SCR; i++) world[i] = 0; 
+  memset(world, 0, 4*SCR); 
 
   filled = 0;
   last_filled = 0;
@@ -98,6 +99,7 @@ void setup(void){
   srand(time(NULL));
   
   display.begin();
+  display.startWrite();
   display.setColorDepth(16);
   display.fillScreen(TFT_BLACK);
 

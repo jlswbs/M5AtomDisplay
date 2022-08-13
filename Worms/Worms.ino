@@ -1,4 +1,4 @@
-// Multi Langton's Ant cellular automata //
+// Worms cellular automata //
 
 #include <M5GFX.h>
 #include <M5AtomDisplay.h>
@@ -11,7 +11,7 @@ M5AtomDisplay display (WIDTH, HEIGHT);
 
 uint16_t size = ((2*WIDTH) * (2*HEIGHT));
 
-#define NUMANTS 6
+#define NUMANTS 8
 
   uint16_t *world = NULL;
   uint16_t coll[NUMANTS];
@@ -30,7 +30,7 @@ void rndrule(){
   
     x[i] = esp_random()%WIDTH;
     y[i] = esp_random()%HEIGHT;
-    antsdir[i] = esp_random()%4;
+    antsdir[i] = esp_random()%8;
     coll[i] = esp_random();
     
   }
@@ -58,28 +58,25 @@ void setup(void){
 }
 
 void loop(void){
-
+  
   for(int i = 0; i < NUMANTS; i++){
-    
-    if (world[x[i]+WIDTH*y[i]] > 0){
       
-      antsdir[i] = antsdir[i] - 1;
-      world[x[i]+WIDTH*y[i]] = 0;
-      
-    } else {
-      
-      antsdir[i] = antsdir[i] + 1;
-      world[x[i]+WIDTH*y[i]] = coll[i];
-      
-    }
+    if (world[x[i]+WIDTH*y[i]] > TFT_BLACK){ antsdir[i] = antsdir[i] - 1; world[x[i]+WIDTH*y[i]] = TFT_BLACK; }
+    else { antsdir[i] = antsdir[i] + 1; world[x[i]+WIDTH*y[i]] = coll[i]; }
 
-    if (antsdir[i] > 3) antsdir[i] = 0;   
-    if (antsdir[i] < 0) antsdir[i] = 3;   
+    if (antsdir[i] > 7) antsdir[i] = 0;   
+    if (antsdir[i] < 0) antsdir[i] = 7;
     
-    if (antsdir[i] == 0) x[i] = x[i] - 1;
-    if (antsdir[i] == 1) y[i] = y[i] + 1;
-    if (antsdir[i] == 2) x[i] = x[i] + 1;
-    if (antsdir[i] == 3) y[i] = y[i] - 1;
+    switch(antsdir[i]){
+      case 0: y[i]--; break;
+      case 1: y[i]--; x[i]++; break;
+      case 2: x[i]++; break;
+      case 3: x[i]++; y[i]++; break;
+      case 4: y[i]++; break;
+      case 5: y[i]++; x[i]--; break;
+      case 6: x[i]--; break;
+      case 7: x[i]--; y[i]--; break;
+    }
     
     if (x[i] > WIDTH-1) x[i] = 0;
     if (x[i] < 0) x[i] = WIDTH-1;
